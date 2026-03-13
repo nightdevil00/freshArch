@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+exec setsid google-chrome-stable --new-window --app="$1" "${@:2}" &

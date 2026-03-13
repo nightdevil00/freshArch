@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+APPS_DIR="$HOME/.local/share/applications"
+DESKTOP_FILES=($APPS_DIR/*.desktop)
+
+if [ ${#DESKTOP_FILES[@]} -eq 0 ] || [ ! -f "${DESKTOP_FILES[0]}" ]; then
+    gum style --foreground 196 "No webapps found. Run 'webapp-add' to create one."
+    exit 1
+fi
+
+declare -a APP_NAMES
+declare -a APP_EXECS
+
+for file in "${DESKTOP_FILES[@]}"; do
+    if [ -f "$file" ]; then
+        NAME=$(grep "^Name=" "$file" | cut -d= -f2)
+        EXEC=$(grep "^Exec=" "$file" | cut -d= -f2)
+        if [ -n "$NAME" ] && [ -n "$EXEC" ]; then
+            APP_NAMES+=("$NAME")
+            APP_EXECS+=("$EXEC")
+        fi
+    fi
+done
+
+if [ ${#APP_NAMES[@]} -eq 0 ]; then
+    gum style --foreground 196 "No valid webapps found."
+    exit 1
+fi
+
+CHOICE=$(gum choose --limit 1 "${APP_NAMES[@]}")
+
+if [ -z "$CHOICE" ]; then
+    exit 0
+fi
+
+for i in "${!APP_NAMES[@]}"; do
+    if [ "${APP_NAMES[$i]}" = "$CHOICE" ]; then
+        eval "${APP_EXECS[$i]}" &
+        break
+    fi
+done

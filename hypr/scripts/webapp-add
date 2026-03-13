@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+ICONS_DIR="$HOME/.local/share/applications/icons"
+APPS_DIR="$HOME/.local/share/applications"
+
+mkdir -p "$ICONS_DIR"
+mkdir -p "$APPS_DIR"
+
+APP_NAME=$(gum input --placeholder "My favorite web app" --prompt "Name> ")
+if [ -z "$APP_NAME" ]; then
+    gum style --foreground 196 "App name cannot be empty"
+    exit 1
+fi
+
+APP_URL=$(gum input --placeholder "https://example.com" --prompt "URL> ")
+if [ -z "$APP_URL" ]; then
+    gum style --foreground 196 "URL cannot be empty"
+    exit 1
+fi
+
+ICON_URL=$(gum input --placeholder "See https://dashboardicons.com (must use direct PNG URL)" --prompt "Icon URL> ")
+
+if [ -n "$ICON_URL" ]; then
+    ICON_PATH="$ICONS_DIR/${APP_NAME}.png"
+    if ! curl -sL -o "$ICON_PATH" "$ICON_URL"; then
+        gum style --foreground 226 "Failed to download icon, using default"
+        ICON_PATH=""
+    fi
+else
+    ICON_PATH=""
+fi
+
+DESKTOP_FILE="$APPS_DIR/${APP_NAME}.desktop"
+DESKTOP_FILE="${DESKTOP_FILE// /-}"
+
+cat > "$DESKTOP_FILE" << EOF
+[Desktop Entry]
+Version=1.0
+Name=$APP_NAME
+Comment=$APP_NAME
+Exec=setsid google-chrome-stable --new-window --app="$APP_URL"
+Terminal=false
+Type=Application
+Icon=${ICON_PATH:-$HOME/.config/hypr/hyprland.svg}
+StartupNotify=true
+EOF
+
+chmod +x "$DESKTOP_FILE"
+
+gum style --foreground 46 "✓ Webapp '$APP_NAME' created successfully!"
+gum style --foreground 15 "  Desktop file: $DESKTOP_FILE"
+[ -n "$ICON_PATH" ] && gum style --foreground 15 "  Icon: $ICON_PATH"
