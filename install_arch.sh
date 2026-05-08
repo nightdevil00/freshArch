@@ -453,22 +453,7 @@ useradd -m -G wheel -s /bin/bash "$USERNAME"
 echo "$USERNAME:$PWHASH" | chpasswd -e
 sed -i '/^# %wheel ALL=(ALL:ALL) ALL$/s/^# //' /etc/sudoers
 
-# Pacman configuration (standard online repos)
-cat > /etc/pacman.conf << 'PACCONF'
-[options]
-HoldPkg = pacman glibc
-Architecture = auto
-CheckSpace
-ParallelDownloads = 5
-SigLevel = Required DatabaseOptional
-LocalFileSigLevel = Optional
-
-[core]
-Include = /etc/pacman.d/mirrorlist
-
-[extra]
-Include = /etc/pacman.d/mirrorlist
-PACCONF
+# Pacman configuration kept from the offline repo (copied before chroot)
 
 # mkinitcpio
 sed -i 's/^MODULES=.*/MODULES=(btrfs)/' /etc/mkinitcpio.conf
