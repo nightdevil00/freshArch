@@ -559,9 +559,9 @@ cp "$LOGFILE" /mnt/var/log/ 2>/dev/null || true
 if [[ -d /root/omarchy ]]; then
   info "Setting up Omarchy..."
 
-  # Save user info for omarchy
-  echo "${FULL_NAME:-}" > /mnt/root/omarchy/user_full_name.txt
-  echo "${EMAIL:-}" > /mnt/root/omarchy/user_email_address.txt
+  # Save user info for omarchy inside the omarchy dir (will be copied to user's home)
+  echo "${FULL_NAME:-}" > /root/omarchy/user_full_name.txt
+  echo "${EMAIL:-}" > /root/omarchy/user_email_address.txt
 
   # Mount the offline mirror so it's accessible in the chroot
   mkdir -p /mnt/var/cache/omarchy/mirror/offline
