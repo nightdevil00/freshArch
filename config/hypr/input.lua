@@ -6,9 +6,9 @@ hl.config({
     -- kb_layout = "us,dk,eu",
 
     -- Use a specific keyboard variant if needed (e.g. intl for international keyboards).
-    kb_variant = "intl",
+    -- kb_variant = "intl",
 
-    kb_options = "emtpy";
+    kb_options = "",
 
     -- Change speed of keyboard repeat.
     repeat_rate = 40,
@@ -48,7 +48,7 @@ o.window("com.mitchellh.ghostty", { scroll_touchpad = 0.2 })
 
 -- Enable touchpad gestures for changing workspaces.
 -- See https://wiki.hypr.land/Configuring/Advanced-and-Cool/Gestures/
- hl.gesture({ fingers = 3, direction = "horizontal", action = "workspace" })
+hl.gesture({ fingers = 3, direction = "horizontal", action = "workspace" })
 
 -- Enable touchpad gestures for moving focus (helpful on scrolling layout).
 -- hl.gesture({ fingers = 3, direction = "left", action = function() hl.dispatch(hl.dsp.focus({ direction = "l" })) end })
